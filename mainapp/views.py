@@ -4,6 +4,7 @@ from . import models
 from annoying.decorators import render_to
 from .models import Item, Employee
 
+
 class ItemsListView(generic.ListView):
     model = models.Item
 
@@ -18,5 +19,8 @@ class ItemDetailView(generic.DetailView):
 #     return {}
 
 def index(request):
-    items = Item.objects.all()
+    items = Item.object.all()
     return render(request, 'base.html', {'items': items})
+
+
+
