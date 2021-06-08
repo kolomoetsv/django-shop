@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 
+
 class ViewTestCase(TestCase):
     def test_post_creation(self):
         c = Client()

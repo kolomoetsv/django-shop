@@ -20,7 +20,6 @@ class Item(models.Model):
     """
     Model representing an item (product)
     """
-    employee = models.ManyToManyField(Employee, verbose_name='Продавец', through='Sale')
     title = models.CharField(max_length=200, verbose_name='Наименование товара', help_text="Введите название товара")
     slug = models.SlugField(unique=True)
     image = models.ImageField(verbose_name='Изображение товара')
@@ -42,17 +41,17 @@ class Sale(models.Model):
     Model representing a sale
     """
     item = models.ForeignKey(Item, verbose_name='Наименование товара', on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, verbose_name='Продавец', on_delete=models.CASCADE)
+    employee = models.ManyToManyField(Employee, verbose_name='Продавец')
     qty = models.PositiveIntegerField(default=1, verbose_name='Количество')
-    # content_object = GenericForeignKey
-    date_of_sale = models.DateTimeField(auto_now=True, verbose_name='Дата продажы')
+    date_of_sale = models.DateTimeField(auto_now=True, verbose_name='Дата продажи')
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Общая стоимость')
 
     # Methods
+    def save(self, *args, **kwargs):
+        self.total_price = self.qty * self.item.price
+        super().save(*args, **kwargs)
+
     def __str__(self):
         # String for representing the Model object.
         return self.item
 
-    # def save(self, *args, **kwargs):
-    #     self.total_price = self.qty * self.content_object.price
-    #     super().save(*args, **kwargs)
